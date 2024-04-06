@@ -6,15 +6,27 @@ import subprocess
 import cv2
 import base64
 import io
-from keras.preprocessing import image
-from keras.models import load_model
-from keras.preprocessing.image import img_to_array
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+import tensorflow as tf
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import img_to_array
 import numpy as np
 import json
 from PIL import Image
 import io
-import os
 import cv2
+import warnings
+import logging
+
+# Suppress warning
+warnings.filterwarnings("ignore", category=UserWarning, message="Trying to unpickle estimator")
+
+tf.get_logger().setLevel(logging.ERROR)
+
+
+
 
 
 
