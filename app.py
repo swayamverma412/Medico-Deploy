@@ -2,10 +2,7 @@ from flask import Flask, request, render_template, jsonify  # Import jsonify
 import numpy as np
 import pandas as pd
 import pickle
-import subprocess
 import cv2
-import base64
-import io
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
@@ -15,7 +12,6 @@ from tensorflow.keras.preprocessing.image import img_to_array
 import numpy as np
 import json
 from PIL import Image
-import io
 import cv2
 import warnings
 import logging
@@ -295,7 +291,6 @@ def pneumonia():
 
 
 
-model = load_model("models/skin_disorder_classifier_EfficientNetB2.keras")
 
 def get_treatment(path):
     with open(path) as f:
@@ -317,30 +312,7 @@ def is_skin(img):
 
 @app.route('/skin', methods=['GET', 'POST'])
 def skin():
-    if request.method == 'POST':
-        file = request.files['file']
-        image = Image.open(file)
-
-        if not is_skin(np.array(image)):
-            return render_template('error.html', error='The uploaded image could not be processed. Please ensure that the image contains skin and try again.')
-
-        img = image.resize((300, 300))
-        img_array = img_to_array(img)
-        img = img_array / 255.0
-        image = np.expand_dims(img, axis=0)
-        pred = model.predict(image)
-        class_idx = np.argmax(pred)
-        classes = ["Acne", "Basal cell carcinoma", "Benign Keratosis-like Lesions (BKL)", "Atopic dermatitis(Eczema)",
-                   "Actinic keratosis(AK)", "Melanoma", "Psoriasis", "Tinea(Ringworm)"]
-        pred_class = classes[class_idx]
-        prob = pred[0][class_idx]
-        threshold = 0.6
-        if prob < threshold:
-            return render_template('error.html', error='Inconclusive result. Please consult a healthcare professional for an accurate diagnosis')
-        treatments = treatment_dict.get(pred_class, [])
-        return render_template('skin.html', prediction_skin=pred_class, probability=prob, treatments=treatments)
-    else:
-        return render_template('skin.html')
+    return render_template('skin.html')
 
 
 
