@@ -167,7 +167,7 @@ def brain():
         img_bytes = img.read()
         img_array = np.array(bytearray(img_bytes), dtype=np.uint8)
         img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
-        img = cv2.resize(img, (150, 150))
+        img = cv2.resize(img, (300, 300))
         img_array = np.expand_dims(img, axis=0)
         img_array = np.expand_dims(img_array, axis=-1)
         predictions = model.predict(img_array)
